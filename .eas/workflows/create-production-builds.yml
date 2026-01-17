@@ -1,0 +1,14 @@
+name: Create Production Builds
+
+# Sadece main branch'e tag push edildiğinde çalışır (release için)
+on:
+  push:
+    tags:
+      - 'v*' # v1.0.0, v2.1.0 gibi tag'lerde tetiklenir
+
+jobs:
+  build_android:
+    type: build
+    params:
+      platform: android
+      profile: production

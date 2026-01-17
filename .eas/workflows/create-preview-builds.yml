@@ -1,0 +1,20 @@
+name: Create Preview Builds
+
+# Manuel tetikleme - sadece ihtiyaç olduğunda çalıştırılır
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Build platform'
+        required: true
+        default: 'android'
+        options:
+          - android
+
+
+jobs:
+  build_preview:
+    type: build
+    params:
+      platform: ${{ inputs.platform }}
+      profile: preview

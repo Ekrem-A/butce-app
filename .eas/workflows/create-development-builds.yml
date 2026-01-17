@@ -1,0 +1,14 @@
+name: Create Development Builds
+
+# Sadece develop branch'e push yapıldığında çalışır
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build_android_dev:
+    type: build
+    params:
+      platform: android
+      profile: development

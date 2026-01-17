@@ -1,0 +1,36 @@
+# Development Dockerfile
+# Expo development server için kullanılır
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies for native modules
+RUN apk add --no-cache libc6-compat git
+
+# Copy package files
+COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
+
+# Install dependencies
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  else npm install; \
+  fi
+
+# Copy source code
+COPY . .
+
+# Expo ports
+# 8081 - Metro Bundler
+# 19000 - Expo DevTools
+# 19001 - Expo DevTools
+# 19002 - Expo DevTools
+EXPOSE 8081 19000 19001 19002
+
+# Environment variables
+ENV EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+ENV REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+
+# Start Expo development server
+CMD ["npx", "expo", "start", "--web", "--host", "lan"]
